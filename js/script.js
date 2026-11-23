@@ -402,11 +402,28 @@ const initCollectionFilters = () => {
       }
     })
 
-    const statusNode = $(`[data-status-group="${group}"] strong`)
-    if (statusNode) {
-      statusNode.textContent = String(visibleIndex)
+    const statusWrap = $(`[data-status-group="${group}"]`)
+    if (statusWrap) {
+      statusWrap.innerHTML = `SHOWING <strong>${visibleIndex}</strong> OF ${cards.length} SIGNATURE PIECES`
     }
   }
+
+  // Dynamically sync filter pill counters from the actual DOM cards
+  ;['women', 'men'].forEach(group => {
+    const grid = $(`[data-grid-group="${group}"]`)
+    if (!grid) return
+    const cards = $$('.product-card', grid)
+    $$(`.filter-pill[data-filter-group="${group}"]`).forEach(btn => {
+      const f = btn.dataset.filter
+      const countEl = $('.pill-count', btn)
+      if (!countEl) return
+      const count =
+        f === 'all'
+          ? cards.length
+          : cards.filter(c => (c.dataset.tags || '').split(/\s+/).includes(f)).length
+      countEl.textContent = String(count).padStart(2, '0')
+    })
+  })
 
   // Interactive Price Sort Toggle (Curated -> Low to High -> High to Low)
   $$('[data-sort-group]').forEach(sortBtn => {
@@ -646,23 +663,36 @@ const updateBag = (bump = false) => {
     ? bag
         .map(
           (item, index) =>
-            `<div class="bag-item"><img src="${item.image}" alt=""><div>${item.name}<div class="bag-quantity"><button type="button" data-quantity="-1" data-index="${index}" aria-label="Remove one ${item.name}">−</button><span>Qty ${item.quantity}</span><button type="button" data-quantity="1" data-index="${index}" aria-label="Add one ${item.name}">+</button></div></div><div>INR ${(Number(item.price) * item.quantity).toLocaleString('en-IN')}<br><button type="button" data-remove="${index}">Remove</button></div></div>`
+            `<div class="bag-item"><img src="${item.image}" alt=""><div><span class="bag-item-sub">FORMA ATELIER · READY TO SHIP</span><strong class="bag-item-title">${item.name}</strong><div class="bag-quantity"><button type="button" data-quantity="-1" data-index="${index}" aria-label="Remove one ${item.name}">−</button><span>Qty ${item.quantity}</span><button type="button" data-quantity="1" data-index="${index}" aria-label="Add one ${item.name}">+</button></div></div><div>INR ${(Number(item.price) * item.quantity).toLocaleString('en-IN')}<br><button type="button" data-remove="${index}">REMOVE</button></div></div>`
         )
         .join('')
-    : '<p class="bag-empty">Your bag is taking a quiet moment.<br/>Find a piece that feels like you.</p>'
+    : `<div class="bag-empty-card"><span class="bag-empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span><p class="bag-empty">Your bag is taking a quiet moment.</p><p class="bag-empty-sub">Find a signature piece crafted to be worn on repeat.</p><div class="bag-empty-links"><a href="#women" class="bag-quick-nav" data-bag-nav>WOMEN'S EDIT <span>↗</span></a><a href="#men-products" class="bag-quick-nav" data-bag-nav>MEN'S EDIT <span>↗</span></a></div></div>`
 
   const total = bag.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0)
   $('.bag-total strong').textContent = `INR ${total.toLocaleString('en-IN')}`
 
+  const clearBtn = $('.bag-clear-btn')
+  if (clearBtn) clearBtn.hidden = bag.length === 0
+
+  const deliveryVal = $('.bag-delivery-val')
+  if (deliveryVal) {
+    deliveryVal.textContent =
+      total === 0 ? 'INR 99 (Free over INR 4,000)' : total >= FREE_DELIVERY_FROM ? 'Complimentary ✓' : 'INR 99'
+  }
+
+  const shippingMeter = $('.bag-shipping-meter')
   const shippingFill = $('.bag-shipping-fill')
   const shippingText = $('.bag-shipping-text')
+  const shippingPct = $('.bag-shipping-pct')
   if (shippingFill && shippingText) {
     const pct = Math.min(100, Math.round((total / FREE_DELIVERY_FROM) * 100))
     shippingFill.style.width = `${pct}%`
+    if (shippingPct) shippingPct.textContent = `${pct}%`
+    if (shippingMeter) shippingMeter.classList.toggle('is-unlocked', total >= FREE_DELIVERY_FROM)
     if (total === 0) {
       shippingText.textContent = `Complimentary delivery on orders over INR ${FREE_DELIVERY_FROM.toLocaleString('en-IN')}`
     } else if (total >= FREE_DELIVERY_FROM) {
-      shippingText.textContent = '✓ Your selection qualifies for complimentary delivery'
+      shippingText.textContent = '✓ Complimentary delivery & garment bag unlocked'
     } else {
       shippingText.textContent = `Add INR ${(FREE_DELIVERY_FROM - total).toLocaleString('en-IN')} more for complimentary delivery`
     }
@@ -778,6 +808,30 @@ document.addEventListener('click', event => {
     return
   }
 
+  const upsellButton = event.target.closest('[data-upsell-name]')
+  if (upsellButton) {
+    addProductToBag({
+      name: upsellButton.dataset.upsellName,
+      price: upsellButton.dataset.upsellPrice,
+      image: upsellButton.dataset.upsellImg
+    })
+    return
+  }
+
+  const clearAllBtn = event.target.closest('.bag-clear-btn')
+  if (clearAllBtn) {
+    bag = []
+    updateBag()
+    announce('Your shopping bag has been cleared')
+    return
+  }
+
+  const bagNavLink = event.target.closest('[data-bag-nav]')
+  if (bagNavLink) {
+    closePanels()
+    return
+  }
+
   const quantityButton = event.target.closest('[data-quantity]')
   if (quantityButton) {
     const index = Number(quantityButton.dataset.index)
@@ -790,11 +844,8 @@ document.addEventListener('click', event => {
 })
 
 $('.checkout-button').addEventListener('click', () => {
-  if (!bag.length) {
-    announce('Add a piece to your bag before checking out.')
-    return
-  }
-  window.location.assign('checkout.html')
+  const targetUrl = window.location.pathname.includes('/html/') ? 'checkout.html' : 'html/checkout.html'
+  window.location.assign(targetUrl)
 })
 
 /* ==========================================================================
@@ -852,23 +903,84 @@ resultBox.addEventListener('click', event => {
 })
 
 /* ==========================================================================
-   11. Newsletter Form Submission & Reveal Observer
+   11. Newsletter Form Submission, Interest Pills & Reveal Observer
    ========================================================================== */
+
+// Interactive Story Philosophy Pillar Tabs
+$$('.story-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    $$('.story-tab').forEach(t => {
+      t.classList.remove('is-active')
+      t.setAttribute('aria-selected', 'false')
+    })
+    tab.classList.add('is-active')
+    tab.setAttribute('aria-selected', 'true')
+
+    const detailEl = $('#story-tab-detail')
+    const kickerEl = $('#story-craft-kicker')
+    const titleEl = $('#story-craft-title')
+    const noteEl = $('#story-craft-note')
+
+    if (detailEl && tab.dataset.storyBody) detailEl.textContent = tab.dataset.storyBody
+    if (kickerEl && tab.dataset.storyKicker) kickerEl.textContent = tab.dataset.storyKicker
+    if (titleEl && tab.dataset.storyTitle) titleEl.textContent = tab.dataset.storyTitle
+    if (noteEl && tab.dataset.storyNote) noteEl.textContent = tab.dataset.storyNote
+  })
+})
+
+$$('.interest-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    $$('.interest-pill').forEach(p => p.classList.remove('is-active'))
+    pill.classList.add('is-active')
+
+    const previewImg = $('.newsletter-preview-img')
+    const sealText = $('#newsletter-seal-text')
+    const quoteText = $('#newsletter-quote-text')
+
+    if (previewImg && pill.dataset.previewImg && previewImg.src !== pill.dataset.previewImg) {
+      previewImg.classList.add('is-switching')
+      setTimeout(() => {
+        previewImg.src = pill.dataset.previewImg
+        previewImg.classList.remove('is-switching')
+      }, 160)
+    }
+    if (sealText && pill.dataset.previewSeal) {
+      sealText.textContent = pill.dataset.previewSeal
+    }
+    if (quoteText && pill.dataset.previewQuote) {
+      quoteText.textContent = pill.dataset.previewQuote
+    }
+  })
+})
 
 $('.newsletter-form').addEventListener('submit', event => {
   event.preventDefault()
+  const form = event.currentTarget
   const input = $('#email')
   const msg = $('.form-message')
+  const submitBtn = $('button[type="submit"]', form)
+  const selectedEdition = $('.interest-pill.is-active')?.dataset.interest || 'All Dispatches'
+
   if (!input.value.trim() || !input.checkValidity()) {
     msg.classList.remove('is-success')
-    msg.textContent = 'Please enter a valid email address to subscribe.'
+    msg.textContent = 'Please enter a valid email address to receive your studio invitation.'
     input.focus()
     return
   }
+
   msg.classList.add('is-success')
-  msg.textContent = "✓ Thanks for your interest. This preview isn't connected to an email service yet."
-  announce('Subscribed to Letters from the Studio')
-  event.currentTarget.reset()
+  msg.textContent = `✓ Subscribed to ${selectedEdition}. Use privilege code ATELIER10 at checkout.`
+  if (submitBtn) {
+    const originalHTML = submitBtn.innerHTML
+    submitBtn.classList.add('is-subscribed')
+    submitBtn.innerHTML = '<span class="submit-text">INVITATION SENT</span><span class="submit-arrow" aria-hidden="true">✓</span>'
+    setTimeout(() => {
+      submitBtn.classList.remove('is-subscribed')
+      submitBtn.innerHTML = originalHTML
+    }, 3200)
+  }
+  announce(`Subscribed to Letters from the Studio (${selectedEdition})`)
+  form.reset()
 })
 
 if ('IntersectionObserver' in window && !reduceMotion) {

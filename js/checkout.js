@@ -63,6 +63,23 @@ function renderSummary() {
 
 renderSummary()
 
+document.addEventListener('click', event => {
+  const pickBtn = event.target.closest('[data-pick-name]')
+  if (!pickBtn) return
+  const existing = cart.find(item => item.name === pickBtn.dataset.pickName)
+  if (existing) existing.quantity += 1
+  else {
+    cart.push({
+      name: pickBtn.dataset.pickName,
+      price: pickBtn.dataset.pickPrice,
+      image: pickBtn.dataset.pickImg,
+      quantity: 1
+    })
+  }
+  saveCart()
+  renderSummary()
+})
+
 $('.checkout-items').addEventListener('click', event => {
   const remove = event.target.closest('[data-remove]')
   if (remove) cart.splice(Number(remove.dataset.remove), 1)

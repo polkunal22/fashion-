@@ -631,7 +631,77 @@
 }
 
 .empty-checkout {
-  padding: 10px 0 30px;
+  padding: 18px 22px 26px;
+  background: var(--white);
+  border: 1px solid rgba(168, 142, 101, 0.3);
+  margin-bottom: 24px;
+}
+
+.empty-checkout-copy {
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+.checkout-quick-picks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.checkout-pick-card {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.checkout-pick-card img {
+  width: 46px;
+  height: 58px;
+  object-fit: cover;
+}
+
+.checkout-pick-card strong {
+  display: block;
+  font: 15px/1.15 var(--serif);
+  color: var(--ink);
+}
+
+.checkout-pick-card span {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.checkout-pick-btn {
+  height: 30px;
+  padding: 0 10px;
+  background: var(--night);
+  color: #fff;
+  border: 0;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.checkout-pick-btn:hover {
+  background: var(--accent-strong);
+}
+
+@media (max-width: 640px) {
+  .checkout-quick-picks {
+    grid-template-columns: 1fr;
+  }
 }
 
 .empty-checkout > .eyebrow {
@@ -716,26 +786,43 @@
 .checkout-footer {
   border-top: 1px solid #e4dfd5;
   width: min(1200px, 88%);
-  padding: 20px 0;
+  padding: 22px 0 30px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #928d82;
+  flex-wrap: wrap;
+  gap: 16px;
+  color: #827d73;
   font-size: 9px;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.14em;
 }
 
-.checkout-footer span:nth-child(2) {
-  font-size: 10px;
-  color: #716b60;
+.designer-plaque-light {
+  background: var(--white);
+  border-color: rgba(168, 142, 101, 0.42);
+  box-shadow: 0 8px 22px rgba(36, 36, 31, 0.06);
 }
 
-.checkout-footer span:nth-child(2) b {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+.designer-plaque-light .kp-role {
+  color: var(--muted);
+}
+
+.designer-plaque-light .kp-name {
+  color: var(--ink);
+}
+
+.designer-plaque-light .kp-name i {
   color: var(--accent-strong);
+}
+
+.designer-plaque-light .kp-github {
+  color: var(--accent-strong);
+  border-left-color: rgba(168, 142, 101, 0.3);
+}
+
+.designer-plaque-light:hover .kp-github svg {
+  color: var(--ink);
 }
 
 .checkout-page [hidden] {
