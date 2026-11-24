@@ -5,12 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f4f1e9" />
   <meta name="description" content="Discover considered clothing for men and women. Modern essentials, thoughtful layers, and pieces made to be worn on repeat." />
+  <meta property="og:title" content="FORMA — Atelier of Everyday | Luxury Wardrobe" />
+  <meta property="og:description" content="40 signature garments across Women's and Men's collections. Natural fibres, 3D spatial lookbook, and full-stack SQL order engine." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85" />
+  <meta name="twitter:card" content="summary_large_image" />
   <title>FORMA — A considered wardrobe</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231b1b17'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='34' fill='%23d7c5a5'%3EF%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,400&family=Italiana&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=2400&q=90&crop=faces" />
   <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('forma-theme');
+        if (saved === 'dark' || saved === 'light') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <script src="../js/script.js" defer></script>
 </head>
 
@@ -27,6 +44,11 @@
       <span>Complimentary delivery &amp; garment bag</span> on orders over INR 4,000 <i></i> Thoughtfully made, always
     </div>
     <div class="announcement-right">
+      <button type="button" class="sql-status-pill" data-open-orders aria-label="View live SQL database and orders">
+        <span class="sql-live-dot" aria-hidden="true"></span>
+        <span class="sql-status-text">SQL DB LIVE</span>
+      </button>
+      <span class="announce-sep" aria-hidden="true">/</span>
       <a href="#story">OUR CRAFT</a>
       <span class="announce-sep" aria-hidden="true">/</span>
       <span class="announce-currency">INR (₹)</span>
@@ -49,10 +71,25 @@
       <span>ATELIER OF EVERYDAY</span>
     </a>
     <div class="header-actions">
+      <button type="button" class="icon-button theme-toggle" data-theme-toggle data-magnetic aria-label="Toggle Day and Night mode" aria-pressed="false" title="Switch Day / Night Atelier Theme">
+        <span class="theme-icon-track" aria-hidden="true">
+          <svg class="theme-icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.4M12 19.6V22M4.93 4.93l1.7 1.7M17.37 17.37l1.7 1.7M2 12h2.4M19.6 12H22M4.93 19.07l1.7-1.7M17.37 6.63l1.7-1.7"/></svg>
+          <svg class="theme-icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+        <span class="theme-toggle-label">DAY</span>
+      </button>
       <button class="icon-button search-toggle" data-magnetic aria-label="Search collection">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
         <span class="search-trigger-text">SEARCH</span>
         <kbd class="search-kbd" aria-hidden="true">/</kbd>
+      </button>
+      <button class="icon-button orders-toggle" data-open-orders data-magnetic aria-label="Track orders and SQL database">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+        <span class="orders-trigger-text">ORDERS</span>
+      </button>
+      <button class="icon-button wishlist-toggle" data-magnetic aria-label="Open saved pieces">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="wishlist-count">0</span>
       </button>
       <button class="icon-button bag-toggle" data-magnetic aria-label="Open shopping bag">
         <svg class="bag-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -89,10 +126,15 @@
       </div>
       <div class="hero-shade"></div>
       <div class="hero-ambient" aria-hidden="true"></div>
+      <div class="hero-3d-rings" aria-hidden="true">
+        <span class="hero-3d-ring hero-3d-ring-1"></span>
+        <span class="hero-3d-ring hero-3d-ring-2"></span>
+        <span class="hero-3d-ring hero-3d-ring-3"></span>
+      </div>
 
-      <div class="hero-floating-badge" aria-hidden="true">
+      <div class="hero-floating-badge tw-preserve-3d" aria-hidden="true">
         <span class="pulse-dot"></span>
-        <span>ATELIER EDITION · SPRING / SUMMER '26</span>
+        <span>ATELIER EDITION · SPRING / SUMMER '26 · 3D SPATIAL VIEW</span>
       </div>
 
       <div class="hero-content">
@@ -231,23 +273,23 @@
           <h2 data-split>The new <em>uniform.</em></h2>
         </div>
         <div class="section-head-actions">
-          <div class="filter-bar" role="tablist" aria-label="Filter women's collection">
-            <button type="button" class="filter-pill is-active" data-filter-group="women" data-filter="all" role="tab" aria-selected="true">
+          <div class="filter-bar" role="group" aria-label="Filter women's collection">
+            <button type="button" class="filter-pill is-active" data-filter-group="women" data-filter="all" aria-pressed="true">
               <span class="pill-dot" aria-hidden="true"></span>
               <span>ALL PIECES</span>
               <em class="pill-count">20</em>
             </button>
-            <button type="button" class="filter-pill" data-filter-group="women" data-filter="new" role="tab" aria-selected="false">
+            <button type="button" class="filter-pill" data-filter-group="women" data-filter="new" aria-pressed="false">
               <span class="pill-dot" aria-hidden="true"></span>
               <span>NEW ARRIVALS</span>
               <em class="pill-count">11</em>
             </button>
-            <button type="button" class="filter-pill" data-filter-group="women" data-filter="tailoring" role="tab" aria-selected="false">
+            <button type="button" class="filter-pill" data-filter-group="women" data-filter="tailoring" aria-pressed="false">
               <span class="pill-dot" aria-hidden="true"></span>
               <span>TAILORING &amp; LINEN</span>
               <em class="pill-count">12</em>
             </button>
-            <button type="button" class="filter-pill" data-filter-group="women" data-filter="essentials" role="tab" aria-selected="false">
+            <button type="button" class="filter-pill" data-filter-group="women" data-filter="essentials" aria-pressed="false">
               <span class="pill-dot" aria-hidden="true"></span>
               <span>STUDIO FAVOURITES</span>
               <em class="pill-count">11</em>
@@ -827,23 +869,23 @@
           <h2 data-split>Easy does <em>it.</em></h2>
         </div>
         <div class="section-head-actions">
-          <div class="filter-bar" role="tablist" aria-label="Filter men's collection">
-            <button type="button" class="filter-pill is-active" data-filter-group="men" data-filter="all" role="tab" aria-selected="true">
+          <div class="filter-bar" role="group" aria-label="Filter men's collection">
+            <button type="button" class="filter-pill is-active" data-filter-group="men" data-filter="all" aria-pressed="true">
               <span class="pill-dot" aria-hidden="true"></span>
               <span>ALL PIECES</span>
               <em class="pill-count">20</em>
             </button>
-            <button type="button" class="filter-pill" data-filter-group="men" data-filter="new" role="tab" aria-selected="false">
+            <button type="button" class="filter-pill" data-filter-group="men" data-filter="new" aria-pressed="false">
               <span class="pill-dot" aria-hidden="true"></span>
               <span>NEW ARRIVALS</span>
               <em class="pill-count">11</em>
             </button>
-            <button type="button" class="filter-pill" data-filter-group="men" data-filter="shirting" role="tab" aria-selected="false">
+            <button type="button" class="filter-pill" data-filter-group="men" data-filter="shirting" aria-pressed="false">
               <span class="pill-dot" aria-hidden="true"></span>
               <span>SHIRTS &amp; JACKETS</span>
               <em class="pill-count">12</em>
             </button>
-            <button type="button" class="filter-pill" data-filter-group="men" data-filter="essentials" role="tab" aria-selected="false">
+            <button type="button" class="filter-pill" data-filter-group="men" data-filter="essentials" aria-pressed="false">
               <span class="pill-dot" aria-hidden="true"></span>
               <span>CORE ESSENTIALS</span>
               <em class="pill-count">11</em>
@@ -1433,12 +1475,11 @@
         <h2 data-split>Less, but<br/><em>loved longer.</em></h2>
         <p class="story-lead">We believe the best wardrobe is the one that feels like you. So we focus on pieces with honest materials, useful details, and a little room to make them your own.</p>
 
-        <div class="story-pillars-tabs" role="tablist" aria-label="Atelier philosophy pillars">
+        <div class="story-pillars-tabs" role="group" aria-label="Atelier philosophy pillars">
           <button
             type="button"
             class="story-tab is-active"
-            role="tab"
-            aria-selected="true"
+            aria-pressed="true"
             data-story-kicker="01 / HONEST MATERIALS"
             data-story-title="Belgian Flax &amp; Organic Cotton"
             data-story-note="Loomed without synthetic blends to soften with every wash."
@@ -1447,8 +1488,7 @@
           <button
             type="button"
             class="story-tab"
-            role="tab"
-            aria-selected="false"
+            aria-pressed="false"
             data-story-kicker="02 / SMALL-BATCH CRAFT"
             data-story-title="French Seams &amp; Corozo Buttons"
             data-story-note="Finished by 14 specialized artisan hands per garment."
@@ -1457,8 +1497,7 @@
           <button
             type="button"
             class="story-tab"
-            role="tab"
-            aria-selected="false"
+            aria-pressed="false"
             data-story-kicker="03 / TIMELESS PROPORTION"
             data-story-title="365+ Days Real-Wear Testing"
             data-story-note="Engineered for unhurried movement across seasons."
@@ -1572,10 +1611,10 @@
             </footer>
           </article>
         </div>
-        <div class="carousel-dots" role="tablist" aria-label="Select reflection">
-          <button type="button" class="carousel-dot is-active" data-carousel-dot="0" aria-label="Reflection 1" aria-selected="true"></button>
-          <button type="button" class="carousel-dot" data-carousel-dot="1" aria-label="Reflection 2" aria-selected="false"></button>
-          <button type="button" class="carousel-dot" data-carousel-dot="2" aria-label="Reflection 3" aria-selected="false"></button>
+        <div class="carousel-dots" role="group" aria-label="Select reflection">
+          <button type="button" class="carousel-dot is-active" data-carousel-dot="0" aria-label="Reflection 1" aria-pressed="true"></button>
+          <button type="button" class="carousel-dot" data-carousel-dot="1" aria-label="Reflection 2" aria-pressed="false"></button>
+          <button type="button" class="carousel-dot" data-carousel-dot="2" aria-label="Reflection 3" aria-pressed="false"></button>
         </div>
       </div>
     </section>
@@ -1933,6 +1972,52 @@
           <div class="qv-meta-row"><span>DELIVERY</span><span>Complimentary over INR 4,000</span></div>
         </div>
       </div>
+    </div>
+  </aside>
+
+  <aside class="wishlist-panel" aria-label="Saved atelier pieces" aria-hidden="true" inert>
+    <button class="panel-close" aria-label="Close saved pieces">×</button>
+    <div class="bag-panel-head">
+      <div class="bag-kicker-row">
+        <span class="bag-kicker-badge">❖ PRIVATE ARCHIVE</span>
+        <p class="eyebrow">CURATED WARDROBE</p>
+      </div>
+      <div class="bag-title-row">
+        <h2>Saved pieces <span class="wishlist-count">0</span></h2>
+        <button type="button" class="wishlist-add-all-btn" hidden>MOVE ALL TO BAG</button>
+      </div>
+    </div>
+    <div class="wishlist-items"></div>
+  </aside>
+
+  <aside class="orders-modal" role="dialog" aria-modal="true" aria-labelledby="orders-modal-title" aria-hidden="true" inert>
+    <button class="panel-close" aria-label="Close orders and SQL portal">×</button>
+    <div class="orders-modal-inner">
+      <div class="orders-modal-head">
+        <div class="bag-kicker-row">
+          <span class="bag-kicker-badge"><i class="sql-live-dot"></i> SQL RELATIONAL ENGINE</span>
+          <p class="eyebrow" id="sql-engine-label">SQLITE3 · DATABASE/FORMA_ATELIER.DB</p>
+        </div>
+        <h2 id="orders-modal-title">Atelier Orders &amp; <em>SQL Registry.</em></h2>
+        <div class="sql-telemetry-bar" aria-label="Database telemetry">
+          <div class="sql-stat-chip"><span>PRODUCTS TABLE</span><strong id="sql-stat-products">40</strong></div>
+          <div class="sql-stat-chip"><span>ORDERS TABLE</span><strong id="sql-stat-orders">1+</strong></div>
+          <div class="sql-stat-chip"><span>SUBSCRIBERS TABLE</span><strong id="sql-stat-subs">14,200+</strong></div>
+          <div class="sql-stat-chip"><span>PRIVILEGE CODE</span><strong>ATELIER10 (10%)</strong></div>
+        </div>
+      </div>
+
+      <form class="orders-lookup-form" novalidate>
+        <input
+          type="search"
+          class="orders-lookup-input"
+          placeholder="Filter by Order Reference (e.g. FRM-2026-1042) or Customer Email..."
+          aria-label="Search orders by reference or email"
+        />
+        <button type="submit" class="orders-lookup-btn">QUERY SQL <span>↗</span></button>
+      </form>
+
+      <div class="orders-list" aria-live="polite"></div>
     </div>
   </aside>
 

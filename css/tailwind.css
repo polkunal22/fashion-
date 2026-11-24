@@ -1,0 +1,814 @@
+/* ==========================================================================
+   FORMA — ATELIER OF EVERYDAY
+   Tailwind CSS Utility Layer & 3D Spatial Perspective Engine (css/tailwind.css)
+   Architected & Designed by Kunal Pol (https://github.com/polkunal22)
+   ========================================================================== */
+
+:root {
+  --perspective-stage: 1400px;
+  --perspective-card: 1100px;
+  --3d-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   1. Tailwind Utility Classes & 3D Transform Utilities
+   ========================================================================== */
+
+.tw-perspective-1000 { perspective: 1000px; }
+.tw-perspective-1400 { perspective: 1400px; }
+.tw-preserve-3d { transform-style: preserve-3d; }
+.tw-backface-hidden {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.tw-translate-z-10 { transform: translateZ(10px); }
+.tw-translate-z-20 { transform: translateZ(20px); }
+.tw-translate-z-30 { transform: translateZ(30px); }
+.tw-translate-z-40 { transform: translateZ(40px); }
+.tw-translate-z-60 { transform: translateZ(60px); }
+.tw-shadow-3d {
+  box-shadow: 0 24px 52px -12px rgba(24, 24, 20, 0.2), 0 8px 20px -6px rgba(168, 142, 101, 0.16);
+}
+
+/* ==========================================================================
+   2. 3D Hero Spatial Stage & Floating Architectural Geometry
+   ========================================================================== */
+
+.hero {
+  perspective: 1400px;
+}
+
+.hero-media {
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease-out;
+}
+
+.hero-content {
+  transform-style: preserve-3d;
+  transition: transform 0.35s var(--3d-ease);
+}
+
+.hero-floating-badge {
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: transform 0.35s var(--3d-ease);
+}
+
+.hero-3d-rings {
+  position: absolute;
+  right: 9%;
+  top: 18%;
+  width: 270px;
+  height: 270px;
+  z-index: 2;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  animation: hero3dFloat 11s ease-in-out infinite alternate;
+}
+
+.hero-3d-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(215, 197, 165, 0.26);
+  transform-style: preserve-3d;
+}
+
+.hero-3d-ring-1 {
+  transform: rotateX(62deg) rotateY(18deg) translateZ(20px);
+  box-shadow: 0 0 30px rgba(215, 197, 165, 0.12);
+  animation: spin3dRing1 18s linear infinite;
+}
+
+.hero-3d-ring-2 {
+  inset: 24px;
+  border-color: rgba(255, 255, 255, 0.18);
+  border-style: dashed;
+  transform: rotateX(28deg) rotateY(64deg) translateZ(40px);
+  animation: spin3dRing2 24s linear infinite reverse;
+}
+
+.hero-3d-ring-3 {
+  inset: 56px;
+  border-color: rgba(168, 142, 101, 0.38);
+  transform: rotateX(74deg) rotateZ(45deg) translateZ(10px);
+}
+
+/* ==========================================================================
+   3. 3D Product Cards, Category Cards & Specular Glare Engine
+   ========================================================================== */
+
+.product-grid,
+.category-grid,
+.story-stats,
+.collection-pillars {
+  perspective: 1300px;
+}
+
+.product-card {
+  transform-style: preserve-3d;
+  will-change: transform, box-shadow;
+  transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(var(--tz, 0px));
+  box-shadow:
+    var(--sx, 0px) var(--sy, 10px) 28px rgba(36, 36, 31, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  transition:
+    transform 0.42s var(--3d-ease),
+    box-shadow 0.42s var(--3d-ease),
+    border-color 0.35s ease;
+}
+
+.product-card.is-tilting {
+  transition: transform 0.09s linear, box-shadow 0.12s linear;
+  z-index: 5;
+}
+
+.product-card:hover {
+  box-shadow:
+    var(--sx, 0px) var(--sy, 26px) 52px rgba(28, 28, 24, 0.16),
+    0 0 0 1px rgba(168, 142, 101, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.product-photo {
+  transform-style: preserve-3d;
+}
+
+/* Multi-plane Z-axis separation inside Product Cards */
+.product-card .badge {
+  transform: translateZ(26px);
+  box-shadow: 0 10px 22px rgba(18, 18, 15, 0.14);
+}
+
+.product-card .quick-view-btn {
+  transform: translateY(-6px) scale(0.92) translateZ(30px);
+}
+
+.product-card:hover .quick-view-btn,
+.product-card .quick-view-btn:focus-visible {
+  transform: translateY(0) scale(1) translateZ(30px);
+}
+
+.product-card .wishlist-card-btn {
+  transform: translateY(-6px) scale(0.92) translateZ(30px);
+}
+
+.product-card:hover .wishlist-card-btn,
+.product-card .wishlist-card-btn:focus-visible,
+.product-card .wishlist-card-btn.is-saved {
+  transform: translateY(0) scale(1) translateZ(30px);
+}
+
+.product-card .card-action-drawer {
+  transform: translateY(calc(100% + 14px)) translateZ(28px);
+}
+
+.product-card:hover .card-action-drawer,
+.product-card .card-action-drawer:focus-within,
+.product-card .card-action-drawer:has(.quick-add.is-added) {
+  transform: translateY(0) translateZ(28px);
+}
+
+.product-card .product-meta,
+.product-card .product-foot {
+  transform: translateZ(16px);
+}
+
+/* Dynamic 3D Specular Light Glare Overlay */
+.card-3d-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(215, 197, 165, 0.16) 28%,
+    transparent 65%
+  );
+  mix-blend-mode: overlay;
+  transition: opacity 0.35s ease;
+}
+
+.product-card:hover .card-3d-glare,
+.category-card:hover .card-3d-glare,
+.atelier-ad-banner:hover .card-3d-glare,
+.newsletter-card:hover .card-3d-glare,
+.story-image:hover .card-3d-glare {
+  opacity: 1;
+}
+
+/* 3D Depth Planes inside Category Cards */
+.category-card {
+  transform-style: preserve-3d;
+}
+
+.category-media {
+  transform-style: preserve-3d;
+}
+
+.category-top-bar {
+  transform: translateZ(34px);
+}
+
+.category-spotlight-chip {
+  transform: translateY(-8px) translateZ(44px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32);
+}
+
+.category-card:hover .category-spotlight-chip {
+  transform: translateY(0) translateZ(44px);
+}
+
+.category-copy {
+  transform: translateZ(38px);
+  box-shadow: 0 22px 48px rgba(12, 12, 10, 0.35);
+}
+
+/* 3D Depth Planes on Atelier Ad Banners, Story Card, Testimonials & Newsletter */
+.atelier-ad-banner,
+.newsletter-card,
+.story-image,
+.testimonial-carousel {
+  transform-style: preserve-3d;
+  position: relative;
+  transition: transform 0.55s var(--3d-ease), box-shadow 0.55s var(--3d-ease);
+}
+
+.story-craft-card {
+  transform: translateZ(36px);
+  box-shadow: 0 20px 44px rgba(12, 12, 10, 0.36);
+}
+
+.stat-item {
+  transform-style: preserve-3d;
+}
+
+.stat-item:hover {
+  transform: perspective(800px) rotateX(4deg) rotateY(-4deg) translateY(-5px) translateZ(12px);
+  box-shadow: 0 22px 42px rgba(36, 36, 31, 0.11);
+}
+
+.pillar-item {
+  transition: transform 0.4s var(--3d-ease);
+}
+
+.pillar-item:hover {
+  transform: translateY(-3px) translateZ(10px);
+}
+
+/* 3D Scroll Reveal Entrance */
+.reveal {
+  transform: perspective(1100px) translateY(32px) rotateX(7deg);
+  transform-origin: center top;
+}
+
+.reveal.is-visible {
+  transform: perspective(1100px) translateY(0) rotateX(0deg);
+}
+
+/* 3D Button Extrusion & Depth */
+.button,
+.place-order,
+.checkout-button,
+.designer-plaque {
+  transform-style: preserve-3d;
+  box-shadow: 0 10px 24px -4px rgba(24, 24, 20, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.button:hover,
+.place-order:hover,
+.checkout-button:hover {
+  box-shadow: 0 18px 36px -6px rgba(24, 24, 20, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Keyframes for 3D Spatial Rings */
+@keyframes hero3dFloat {
+  0% {
+    transform: translate3d(0, 0, 20px) rotateX(6deg) rotateY(-8deg);
+  }
+  100% {
+    transform: translate3d(-14px, -18px, 50px) rotateX(-8deg) rotateY(12deg);
+  }
+}
+
+@keyframes spin3dRing1 {
+  0% {
+    transform: rotateX(62deg) rotateY(18deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(62deg) rotateY(18deg) rotateZ(360deg);
+  }
+}
+
+@keyframes spin3dRing2 {
+  0% {
+    transform: rotateX(28deg) rotateY(64deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(28deg) rotateY(64deg) rotateZ(360deg);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-3d-rings {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .category-card,
+  .hero-content,
+  .hero-3d-rings,
+  .reveal {
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   4. Day & Night Atelier Theme Toggle & Full Obsidian Dark Mode Engine
+   ========================================================================== */
+
+.checkout-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  position: relative;
+  height: 36px;
+  padding: 0 12px 0 9px;
+  border-radius: 999px;
+  background: rgba(252, 251, 248, 0.85);
+  border: 1px solid rgba(168, 142, 101, 0.34);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  color: var(--ink);
+  box-shadow: 0 4px 14px rgba(36, 36, 31, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition:
+    background 0.35s var(--3d-ease),
+    border-color 0.35s var(--3d-ease),
+    color 0.35s var(--3d-ease),
+    box-shadow 0.35s var(--3d-ease),
+    transform 0.35s var(--3d-ease);
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 20px rgba(168, 142, 101, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.theme-icon-track {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(168, 142, 101, 0.16);
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.theme-icon-sun,
+.theme-icon-moon {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: transform 0.45s var(--3d-ease), opacity 0.35s ease;
+}
+
+.theme-icon-sun {
+  color: #9b7b49;
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+}
+
+.theme-icon-moon {
+  color: #e5d3b3;
+  transform: rotate(-90deg) scale(0.4);
+  opacity: 0;
+}
+
+.theme-toggle-label {
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Night Mode Token Overrides */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #121210;
+  --white: #1b1b18;
+  --ink: #f3eee4;
+  --muted: #a8a193;
+  --line: #2d2c26;
+  --olive: #a3a892;
+  --accent: #c9ae80;
+  --accent-strong: #e0c596;
+  --accent-soft: #e6d5b8;
+  --night: #0c0c0a;
+}
+
+html[data-theme="dark"] .theme-toggle {
+  background: rgba(28, 28, 24, 0.92);
+  border-color: rgba(201, 174, 128, 0.45);
+  color: #f3eee4;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .theme-icon-track {
+  background: rgba(201, 174, 128, 0.22);
+}
+
+html[data-theme="dark"] .theme-icon-sun {
+  transform: rotate(90deg) scale(0.4);
+  opacity: 0;
+}
+
+html[data-theme="dark"] .theme-icon-moon {
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+}
+
+/* Night Mode Surface & Component Styling */
+html[data-theme="dark"] body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .checkout-header {
+  background: linear-gradient(180deg, rgba(20, 20, 17, 0.94) 0%, rgba(16, 16, 14, 0.9) 100%);
+  border-bottom-color: rgba(201, 174, 128, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 34px rgba(0, 0, 0, 0.42);
+}
+
+html[data-theme="dark"] .site-header.is-scrolled {
+  background: rgba(16, 16, 14, 0.96);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="dark"] .brand strong,
+html[data-theme="dark"] .main-nav a {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .search-toggle,
+html[data-theme="dark"] .orders-toggle,
+html[data-theme="dark"] .wishlist-toggle,
+html[data-theme="dark"] .checkout-back {
+  background: rgba(30, 30, 26, 0.85);
+  border-color: rgba(201, 174, 128, 0.25);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .search-kbd {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: var(--accent-soft);
+}
+
+html[data-theme="dark"] .bag-toggle {
+  background: linear-gradient(135deg, #c9ae80 0%, #9f8358 100%);
+  color: #121210;
+  border-color: rgba(230, 213, 184, 0.5);
+}
+
+html[data-theme="dark"] .bag-count {
+  background: #121210;
+  color: #f3eee4;
+}
+
+html[data-theme="dark"] .brand-ribbon {
+  background: #171714;
+  border-top-color: var(--line);
+  border-bottom-color: var(--line);
+}
+
+html[data-theme="dark"] .section,
+html[data-theme="dark"] .categories-section {
+  background: var(--paper);
+}
+
+html[data-theme="dark"] .pillar-item,
+html[data-theme="dark"] .filter-dock {
+  background: linear-gradient(180deg, rgba(30, 30, 25, 0.95), rgba(23, 23, 19, 0.92));
+  border-color: rgba(201, 174, 128, 0.24);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+html[data-theme="dark"] .filter-bar,
+html[data-theme="dark"] .sort-select-wrap {
+  background: rgba(18, 18, 15, 0.78);
+  border-color: rgba(201, 174, 128, 0.2);
+}
+
+html[data-theme="dark"] .filter-chip {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .filter-chip.is-active {
+  background: var(--accent);
+  color: #121210;
+}
+
+html[data-theme="dark"] .sort-select {
+  color: var(--ink);
+  background-color: transparent;
+}
+
+html[data-theme="dark"] .sort-select option {
+  background: #1b1b18;
+  color: #f3eee4;
+}
+
+html[data-theme="dark"] .product-card {
+  background: #1a1a17;
+  border-color: rgba(201, 174, 128, 0.2);
+  box-shadow:
+    var(--sx, 0px) var(--sy, 14px) 34px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="dark"] .product-card:hover {
+  background: #20201c;
+  border-color: rgba(201, 174, 128, 0.48);
+  box-shadow:
+    var(--sx, 0px) var(--sy, 26px) 54px rgba(0, 0, 0, 0.62),
+    0 0 0 1px rgba(201, 174, 128, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] .product-photo {
+  background: #23221d;
+}
+
+html[data-theme="dark"] .badge {
+  background: rgba(20, 20, 17, 0.88);
+  color: var(--accent-soft);
+  border-color: rgba(201, 174, 128, 0.35);
+}
+
+html[data-theme="dark"] .quick-view-btn,
+html[data-theme="dark"] .wishlist-card-btn {
+  background: rgba(22, 22, 19, 0.88);
+  color: var(--ink);
+  border-color: rgba(201, 174, 128, 0.3);
+}
+
+html[data-theme="dark"] .card-action-drawer {
+  background: rgba(22, 22, 19, 0.95);
+  border-color: rgba(201, 174, 128, 0.3);
+}
+
+html[data-theme="dark"] .size-pill {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .size-pill.is-selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #121210;
+}
+
+html[data-theme="dark"] .product-meta h3 {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .product-meta strong {
+  color: var(--accent-soft);
+}
+
+html[data-theme="dark"] .product-foot {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .size-range {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--muted);
+}
+
+/* Story, Wearer Reflections & Newsletter in Night Mode */
+html[data-theme="dark"] .story {
+  background: linear-gradient(180deg, #151512 0%, #191915 100%);
+  border-top-color: var(--line);
+  border-bottom-color: var(--line);
+}
+
+html[data-theme="dark"] .story-quote,
+html[data-theme="dark"] .story-pillar-panel,
+html[data-theme="dark"] .stat-item,
+html[data-theme="dark"] .story-atelier-Signoff {
+  background: rgba(28, 28, 24, 0.9);
+  border-color: rgba(201, 174, 128, 0.22);
+}
+
+html[data-theme="dark"] .story-pillar-tab {
+  background: rgba(24, 24, 20, 0.85);
+  border-color: rgba(201, 174, 128, 0.2);
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .story-pillar-tab.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #121210;
+}
+
+html[data-theme="dark"] .testimonials {
+  background: linear-gradient(180deg, #121210 0%, #171713 50%, #121210 100%);
+}
+
+html[data-theme="dark"] .testimonial-summary-pill,
+html[data-theme="dark"] .carousel-btn,
+html[data-theme="dark"] .testimonial-carousel {
+  background: linear-gradient(165deg, rgba(30, 30, 25, 0.96) 0%, rgba(22, 22, 18, 0.94) 100%);
+  border-color: rgba(201, 174, 128, 0.24);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.45);
+}
+
+html[data-theme="dark"] .testimonial-card blockquote,
+html[data-theme="dark"] .author-meta strong {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .verified-tag,
+html[data-theme="dark"] .purchased-piece-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(201, 174, 128, 0.25);
+  color: var(--accent-soft);
+}
+
+html[data-theme="dark"] .newsletter {
+  background: linear-gradient(180deg, #121210 0%, #181814 100%);
+}
+
+html[data-theme="dark"] .newsletter-card {
+  background: #1b1b17;
+  border-color: rgba(201, 174, 128, 0.28);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="dark"] .newsletter-content {
+  background: linear-gradient(155deg, #1d1d19 0%, #161613 100%);
+}
+
+html[data-theme="dark"] .interest-pill,
+html[data-theme="dark"] .newsletter-input-wrap,
+html[data-theme="dark"] .newsletter-privilege-strip,
+html[data-theme="dark"] .subscriber-proof {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(201, 174, 128, 0.24);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .interest-pill.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #121210;
+}
+
+html[data-theme="dark"] .newsletter-input-wrap input {
+  color: var(--ink);
+}
+
+/* Drawers, Search Panel, QuickView, Orders Modal & Checkout Page in Night Mode */
+html[data-theme="dark"] .search-panel,
+html[data-theme="dark"] .bag-panel,
+html[data-theme="dark"] .wishlist-panel,
+html[data-theme="dark"] .quickview-modal,
+html[data-theme="dark"] .orders-modal {
+  background: #181815;
+  color: var(--ink);
+  border-color: rgba(201, 174, 128, 0.25);
+}
+
+html[data-theme="dark"] .panel-close {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(201, 174, 128, 0.25);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .bag-panel-head,
+html[data-theme="dark"] .bag-shipping-meter,
+html[data-theme="dark"] .bag-empty,
+html[data-theme="dark"] .bag-item,
+html[data-theme="dark"] .bag-upsell,
+html[data-theme="dark"] .bag-upsell-item,
+html[data-theme="dark"] .bag-footer-dock,
+html[data-theme="dark"] .wishlist-item,
+html[data-theme="dark"] .search-panel label,
+html[data-theme="dark"] .search-item,
+html[data-theme="dark"] .qv-details,
+html[data-theme="dark"] .orders-modal-head,
+html[data-theme="dark"] .sql-stat-chip,
+html[data-theme="dark"] .order-record-card {
+  background: #20201c;
+  border-color: rgba(201, 174, 128, 0.22);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .search-input,
+html[data-theme="dark"] .orders-lookup-input {
+  background: #141411;
+  color: var(--ink);
+  border-color: rgba(201, 174, 128, 0.28);
+}
+
+html[data-theme="dark"] .suggestion-chip,
+html[data-theme="dark"] .qv-size {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(201, 174, 128, 0.24);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .qv-size.is-selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #121210;
+}
+
+html[data-theme="dark"] .bag-item-info h3,
+html[data-theme="dark"] .bag-total strong,
+html[data-theme="dark"] .bag-delivery-val,
+html[data-theme="dark"] .bag-upsell-info strong,
+html[data-theme="dark"] .bag-shipping-text,
+html[data-theme="dark"] .bag-empty h3,
+html[data-theme="dark"] .qv-title,
+html[data-theme="dark"] .qv-price,
+html[data-theme="dark"] .orders-modal-head h2 {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .checkout-page {
+  background: #121210;
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .checkout-fieldset,
+html[data-theme="dark"] .order-summary,
+html[data-theme="dark"] .checkout-item,
+html[data-theme="dark"] .promo-box,
+html[data-theme="dark"] .shipping-progress,
+html[data-theme="dark"] .demo-notice,
+html[data-theme="dark"] .empty-checkout,
+html[data-theme="dark"] .order-success,
+html[data-theme="dark"] .success-reference,
+html[data-theme="dark"] .checkout-pick-card,
+html[data-theme="dark"] .payment-choice {
+  background: #1b1b17;
+  border-color: rgba(201, 174, 128, 0.24);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .field input,
+html[data-theme="dark"] .field select,
+html[data-theme="dark"] .promo-input-row input {
+  background: #141411;
+  border-color: rgba(201, 174, 128, 0.28);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .promo-chip,
+html[data-theme="dark"] .print-receipt-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(201, 174, 128, 0.28);
+  color: var(--accent-soft);
+}
+
+html[data-theme="dark"] .checkout-footer {
+  border-top-color: rgba(201, 174, 128, 0.2);
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .designer-plaque-light {
+  background: #1b1b17;
+  border-color: rgba(201, 174, 128, 0.32);
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .designer-plaque-light .kp-name {
+  color: var(--ink);
+}
+
+html[data-theme="dark"] .back-to-top {
+  background: rgba(26, 26, 22, 0.92);
+  color: var(--accent-soft);
+  border-color: rgba(201, 174, 128, 0.35);
+}
+

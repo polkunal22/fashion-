@@ -7,6 +7,8 @@ const mainNav = $('.main-nav')
 const overlay = $('.overlay')
 const searchPanel = $('.search-panel')
 const bagPanel = $('.bag-panel')
+const wishlistPanel = $('.wishlist-panel')
+const ordersModal = $('.orders-modal')
 const quickViewModal = $('.quickview-modal')
 const toast = $('.toast')
 const backToTopBtn = $('.back-to-top')
@@ -163,7 +165,7 @@ const initScrollEngine = () => {
 }
 
 /* ==========================================================================
-   3. Magnetic Micro-Interactions & 3D Card Tilt (Desktop Fine Pointer)
+   3. Magnetic Micro-Interactions & Full 3D Spatial Tilt + Specular Glare Engine
    ========================================================================== */
 
 const initMagneticAndTilt = () => {
@@ -174,21 +176,76 @@ const initMagneticAndTilt = () => {
       const rect = el.getBoundingClientRect()
       const x = (event.clientX - rect.left - rect.width / 2) * 0.24
       const y = (event.clientY - rect.top - rect.height / 2) * 0.24
-      el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`
+      el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 14px)`
     })
     el.addEventListener('pointerleave', () => {
       el.style.transform = ''
     })
   })
 
-  $$('[data-tilt]').forEach(card => {
+  // Attach 3D Specular Light Glare & Multi-Axis Perspective Tilt to all Product Cards
+  $$('.product-card').forEach(card => {
+    if (!$('.card-3d-glare', card)) {
+      const glare = document.createElement('span')
+      glare.className = 'card-3d-glare'
+      glare.setAttribute('aria-hidden', 'true')
+      card.appendChild(glare)
+    }
+
     card.addEventListener('pointermove', event => {
       const rect = card.getBoundingClientRect()
-      const relX = (event.clientX - rect.left) / rect.width - 0.5
-      const relY = (event.clientY - rect.top) / rect.height - 0.5
-      const rotateX = (relY * -5).toFixed(2)
-      const rotateY = (relX * 5).toFixed(2)
-      card.style.transform = `perspective(1100px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`
+      const px = (event.clientX - rect.left) / rect.width
+      const py = (event.clientY - rect.top) / rect.height
+      const relX = px - 0.5
+      const relY = py - 0.5
+
+      const rotateX = (relY * -13).toFixed(2)
+      const rotateY = (relX * 13).toFixed(2)
+      const shadowX = (relX * -22).toFixed(1)
+      const shadowY = (18 + relY * -16).toFixed(1)
+
+      card.classList.add('is-tilting')
+      card.style.setProperty('--rx', `${rotateX}deg`)
+      card.style.setProperty('--ry', `${rotateY}deg`)
+      card.style.setProperty('--tz', '12px')
+      card.style.setProperty('--sx', `${shadowX}px`)
+      card.style.setProperty('--sy', `${shadowY}px`)
+      card.style.setProperty('--glare-x', `${(px * 100).toFixed(1)}%`)
+      card.style.setProperty('--glare-y', `${(py * 100).toFixed(1)}%`)
+    })
+
+    card.addEventListener('pointerleave', () => {
+      card.classList.remove('is-tilting')
+      card.style.setProperty('--rx', '0deg')
+      card.style.setProperty('--ry', '0deg')
+      card.style.setProperty('--tz', '0px')
+      card.style.setProperty('--sx', '0px')
+      card.style.setProperty('--sy', '10px')
+    })
+  })
+
+  // Attach 3D Perspective Tilt + Specular Glare to Category Cards, Ad Banners, Story Image & Newsletter Card
+  $$('[data-tilt], .atelier-ad-banner, .story-image, .newsletter-card').forEach(card => {
+    if (!$('.card-3d-glare', card)) {
+      const glare = document.createElement('span')
+      glare.className = 'card-3d-glare'
+      glare.setAttribute('aria-hidden', 'true')
+      card.appendChild(glare)
+    }
+
+    const maxDeg = card.matches('[data-tilt]') ? 8 : 4.5
+    card.addEventListener('pointermove', event => {
+      const rect = card.getBoundingClientRect()
+      const px = (event.clientX - rect.left) / rect.width
+      const py = (event.clientY - rect.top) / rect.height
+      const relX = px - 0.5
+      const relY = py - 0.5
+      const rotateX = (relY * -maxDeg).toFixed(2)
+      const rotateY = (relX * maxDeg).toFixed(2)
+
+      card.style.transform = `perspective(1300px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(0, -4px, 10px)`
+      card.style.setProperty('--glare-x', `${(px * 100).toFixed(1)}%`)
+      card.style.setProperty('--glare-y', `${(py * 100).toFixed(1)}%`)
     })
     card.addEventListener('pointerleave', () => {
       card.style.transform = ''
@@ -245,17 +302,28 @@ const initHeroLookbook = () => {
   startAutoSlide()
 
   if (!reduceMotion && isDesktopPointer) {
+    const heroContent = $('.hero-content', hero)
+    const heroBadge = $('.hero-floating-badge', hero)
     hero.addEventListener('pointermove', event => {
       const activeImg = $('.hero-image.is-active', hero)
-      if (!activeImg) return
       const bounds = hero.getBoundingClientRect()
       const x = (event.clientX - bounds.left) / bounds.width - 0.5
       const y = (event.clientY - bounds.top) / bounds.height - 0.5
-      activeImg.style.transform = `scale(1.055) translate3d(${(x * -14).toFixed(2)}px, ${(y * -10).toFixed(2)}px, 0)`
+      if (activeImg) {
+        activeImg.style.transform = `scale(1.065) translate3d(${(x * -22).toFixed(2)}px, ${(y * -16).toFixed(2)}px, -30px) rotateX(${(y * -4).toFixed(2)}deg) rotateY(${(x * 4).toFixed(2)}deg)`
+      }
+      if (heroContent) {
+        heroContent.style.transform = `translate3d(${(x * 14).toFixed(2)}px, ${(y * 10).toFixed(2)}px, 28px) rotateX(${(y * -3).toFixed(2)}deg) rotateY(${(x * 4).toFixed(2)}deg)`
+      }
+      if (heroBadge) {
+        heroBadge.style.transform = `translate3d(${(x * 18).toFixed(2)}px, ${(y * 10).toFixed(2)}px, 40px)`
+      }
     })
     hero.addEventListener('pointerleave', () => {
       const activeImg = $('.hero-image.is-active', hero)
       if (activeImg) activeImg.style.transform = ''
+      if (heroContent) heroContent.style.transform = ''
+      if (heroBadge) heroBadge.style.transform = ''
     })
   }
 }
@@ -330,7 +398,7 @@ const initTestimonialsCarousel = () => {
     dots.forEach((dot, idx) => {
       const active = idx === currentIndex
       dot.classList.toggle('is-active', active)
-      dot.setAttribute('aria-selected', String(active))
+      dot.setAttribute('aria-pressed', String(active))
     })
     if (statusEl) {
       statusEl.textContent = `0${currentIndex + 1} / 0${cards.length}`
@@ -380,7 +448,7 @@ const initCollectionFilters = () => {
     $$(`.filter-pill[data-filter-group="${group}"]`).forEach(btn => {
       const active = btn.dataset.filter === filterValue
       btn.classList.toggle('is-active', active)
-      btn.setAttribute('aria-selected', String(active))
+      btn.setAttribute('aria-pressed', String(active))
     })
 
     grid.classList.toggle('is-filtered', filterValue !== 'all')
@@ -529,7 +597,7 @@ const initCollectionFilters = () => {
 
 const closePanels = () => {
   overlay.hidden = true
-  ;[searchPanel, bagPanel, quickViewModal].forEach(panel => {
+  ;[searchPanel, bagPanel, wishlistPanel, ordersModal, quickViewModal].forEach(panel => {
     if (!panel) return
     panel.classList.remove('is-open')
     panel.setAttribute('aria-hidden', 'true')
@@ -544,7 +612,7 @@ const openPanel = panel => {
   menuToggle.setAttribute('aria-expanded', 'false')
   menuToggle.setAttribute('aria-label', 'Open menu')
 
-  ;[searchPanel, bagPanel, quickViewModal].forEach(p => {
+  ;[searchPanel, bagPanel, wishlistPanel, ordersModal, quickViewModal].forEach(p => {
     if (p && p !== panel) {
       p.classList.remove('is-open')
       p.setAttribute('aria-hidden', 'true')
@@ -626,8 +694,212 @@ if ('IntersectionObserver' in window) {
 
 $('.search-toggle').addEventListener('click', () => openPanel(searchPanel))
 $('.bag-toggle').addEventListener('click', () => openPanel(bagPanel))
+$('.wishlist-toggle')?.addEventListener('click', () => openPanel(wishlistPanel))
+$$('[data-open-orders]').forEach(btn =>
+  btn.addEventListener('click', () => {
+    openPanel(ordersModal)
+    loadSQLOrders()
+  })
+)
 $$('.panel-close').forEach(button => button.addEventListener('click', closePanels))
 overlay.addEventListener('click', closePanels)
+
+/* ==========================================================================
+   8b. Saved Pieces (Wishlist) & Live SQL Database / Orders Portal
+   ========================================================================== */
+
+let wishlist = []
+try {
+  wishlist = JSON.parse(localStorage.getItem('forma-wishlist') || '[]')
+  if (!Array.isArray(wishlist)) wishlist = []
+} catch {
+  wishlist = []
+}
+
+const updateWishlistUI = () => {
+  try {
+    localStorage.setItem('forma-wishlist', JSON.stringify(wishlist))
+  } catch {
+    /* Fallback to in-memory state */
+  }
+  $$('.wishlist-count').forEach(node => {
+    node.textContent = String(wishlist.length)
+  })
+  const addAllBtn = $('.wishlist-add-all-btn')
+  if (addAllBtn) addAllBtn.hidden = wishlist.length === 0
+
+  $$('.product-card').forEach(card => {
+    const btn = $('.wishlist-card-btn', card)
+    if (!btn) return
+    const saved = wishlist.some(item => item.name === card.dataset.product)
+    btn.classList.toggle('is-saved', saved)
+    btn.setAttribute('aria-pressed', String(saved))
+  })
+
+  const box = $('.wishlist-items')
+  if (!box) return
+  box.innerHTML = wishlist.length
+    ? wishlist
+        .map(
+          (item, idx) =>
+            `<div class="bag-item"><img src="${item.image}" alt=""><div><span class="bag-item-sub">${item.category || 'ATELIER EDIT'}</span><strong class="bag-item-title">${item.name}</strong><button type="button" data-move-to-bag="${idx}">+ MOVE TO BAG</button></div><div>INR ${Number(item.price).toLocaleString('en-IN')}<br><button type="button" data-remove-wish="${idx}">REMOVE</button></div></div>`
+        )
+        .join('')
+    : `<div class="bag-empty-card"><p class="bag-empty">No saved pieces yet.</p><p class="bag-empty-sub">Tap the heart icon on any garment to curate your personal archive.</p></div>`
+}
+
+// Inject floating Heart Wishlist buttons onto all 40 product cards
+$$('.product-card').forEach(card => {
+  const photo = $('.product-photo', card)
+  if (!photo || $('.wishlist-card-btn', photo)) return
+  const btn = document.createElement('button')
+  btn.type = 'button'
+  btn.className = 'wishlist-card-btn'
+  btn.title = 'Save to Archive'
+  btn.setAttribute('aria-label', `Save ${card.dataset.product}`)
+  btn.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`
+  btn.addEventListener('click', e => {
+    e.preventDefault()
+    e.stopPropagation()
+    const name = card.dataset.product
+    const price = card.dataset.price
+    const image = $('img', card)?.src || ''
+    const category = $('.product-meta p', card)?.textContent || 'ATELIER EDIT'
+    const existingIdx = wishlist.findIndex(i => i.name === name)
+    if (existingIdx >= 0) {
+      wishlist.splice(existingIdx, 1)
+      announce(`${name} removed from saved pieces`)
+    } else {
+      wishlist.push({ name, price, image, category })
+      announce(`${name} saved to your archive`)
+    }
+    updateWishlistUI()
+  })
+  photo.appendChild(btn)
+})
+updateWishlistUI()
+
+$('.wishlist-items')?.addEventListener('click', e => {
+  const moveBtn = e.target.closest('[data-move-to-bag]')
+  if (moveBtn) {
+    const idx = Number(moveBtn.dataset.moveToBag)
+    const item = wishlist[idx]
+    if (item) {
+      addProductToBag(item)
+      wishlist.splice(idx, 1)
+      updateWishlistUI()
+    }
+    return
+  }
+  const remBtn = e.target.closest('[data-remove-wish]')
+  if (remBtn) {
+    wishlist.splice(Number(remBtn.dataset.removeWish), 1)
+    updateWishlistUI()
+  }
+})
+
+$('.wishlist-add-all-btn')?.addEventListener('click', () => {
+  if (!wishlist.length) return
+  wishlist.forEach(item => addProductToBag(item))
+  wishlist = []
+  updateWishlistUI()
+  openPanel(bagPanel)
+})
+
+// Live SQL Database Health & Orders Query
+const loadSQLOrders = async (searchTerm = '') => {
+  const listEl = $('.orders-list')
+  if (!listEl) return
+  listEl.innerHTML = '<p class="bag-empty-sub">Querying SQLite relational database...</p>'
+
+  let dbOrders = []
+  try {
+    const healthRes = await fetch('/api/health')
+    if (healthRes.ok) {
+      const h = await healthRes.json()
+      if (h.stats) {
+        $('#sql-stat-products').textContent = String(h.stats.products)
+        $('#sql-stat-orders').textContent = String(h.stats.orders)
+        $('#sql-stat-subs').textContent = (14200 + Number(h.stats.subscribers || 0)).toLocaleString('en-IN')
+      }
+    }
+    const q = searchTerm
+      ? searchTerm.includes('@')
+        ? `?email=${encodeURIComponent(searchTerm)}`
+        : `?ref=${encodeURIComponent(searchTerm)}`
+      : ''
+    const res = await fetch(`/api/orders${q}`)
+    if (res.ok) {
+      const data = await res.json()
+      dbOrders = data.orders || []
+    }
+  } catch {
+    /* Offline/static fallback */
+  }
+
+  let localOrders = []
+  try {
+    localOrders = JSON.parse(localStorage.getItem('forma-orders') || '[]')
+  } catch {
+    localOrders = []
+  }
+  const allOrders = [...dbOrders]
+  localOrders.forEach(lo => {
+    if (!allOrders.some(o => o.order_ref === lo.order_ref)) allOrders.unshift(lo)
+  })
+
+  const filtered = searchTerm
+    ? allOrders.filter(
+        o =>
+          (o.order_ref || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (o.customer_email || '').toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : allOrders
+
+  listEl.innerHTML = filtered.length
+    ? filtered
+        .map(
+          o => `
+        <article class="sql-order-card">
+          <div class="sql-order-top">
+            <span class="sql-order-ref">ORDER #${o.order_ref}</span>
+            <span class="sql-order-status">✓ ${o.order_status || 'CONFIRMED · SQL PERSISTED'}</span>
+          </div>
+          <div class="sql-order-meta">
+            <span><strong>Client:</strong> ${o.first_name || ''} ${o.last_name || ''} (${o.customer_email || ''}) · ${o.city || 'India'}</span>
+            <span><strong>Total:</strong> INR ${Number(o.total_inr || 0).toLocaleString('en-IN')} (${(o.payment_method || 'UPI').toUpperCase()})</span>
+          </div>
+          <div class="sql-order-items">
+            ${(o.items || [])
+              .map(
+                i =>
+                  `<span class="sql-order-pill">${i.product_name || i.name} × ${i.quantity} (INR ${Number(i.line_total_inr || Number(i.price) * i.quantity).toLocaleString('en-IN')})</span>`
+              )
+              .join('')}
+          </div>
+        </article>`
+        )
+        .join('')
+    : '<div class="bag-empty-card"><p class="bag-empty">No matching orders found in SQL table.</p></div>'
+}
+
+$('.orders-lookup-form')?.addEventListener('submit', e => {
+  e.preventDefault()
+  const val = $('.orders-lookup-input')?.value.trim() || ''
+  loadSQLOrders(val)
+})
+
+// Check SQL connection on boot
+fetch('/api/health')
+  .then(r => (r.ok ? r.json() : null))
+  .then(data => {
+    if (data && data.ok) {
+      $$('.sql-status-text').forEach(el => {
+        el.textContent = `SQL DB LIVE (${data.stats.products} ITEMS)`
+      })
+    }
+  })
+  .catch(() => {})
 
 /* ==========================================================================
    9. Shopping Bag & Quick View Logic
@@ -911,10 +1183,10 @@ $$('.story-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     $$('.story-tab').forEach(t => {
       t.classList.remove('is-active')
-      t.setAttribute('aria-selected', 'false')
+      t.setAttribute('aria-pressed', 'false')
     })
     tab.classList.add('is-active')
-    tab.setAttribute('aria-selected', 'true')
+    tab.setAttribute('aria-pressed', 'true')
 
     const detailEl = $('#story-tab-detail')
     const kickerEl = $('#story-craft-kicker')
@@ -968,8 +1240,25 @@ $('.newsletter-form').addEventListener('submit', event => {
     return
   }
 
+  // Persist subscriber to SQL database (/api/newsletter)
+  fetch('/api/newsletter', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: input.value.trim(), edition: selectedEdition })
+  })
+    .then(r => (r.ok ? r.json() : null))
+    .then(data => {
+      if (data && data.total_subscribers) {
+        const subCountEl = $('.subscriber-count')
+        if (subCountEl) {
+          subCountEl.textContent = `JOIN ${Number(data.total_subscribers).toLocaleString('en-IN')}+ READERS`
+        }
+      }
+    })
+    .catch(() => {})
+
   msg.classList.add('is-success')
-  msg.textContent = `✓ Subscribed to ${selectedEdition}. Use privilege code ATELIER10 at checkout.`
+  msg.textContent = `✓ Saved to SQL Studio Registry (${selectedEdition}). Use privilege code ATELIER10 at checkout.`
   if (submitBtn) {
     const originalHTML = submitBtn.innerHTML
     submitBtn.classList.add('is-subscribed')
@@ -999,6 +1288,46 @@ if ('IntersectionObserver' in window && !reduceMotion) {
 }
 
 // Initialize all motion controllers
+const initThemeToggle = () => {
+  const toggles = $$('[data-theme-toggle]')
+  const themeMeta = $('meta[name="theme-color"]')
+
+  const applyTheme = (theme, notify = false) => {
+    const isDark = theme === 'dark'
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
+    if (themeMeta) {
+      themeMeta.setAttribute('content', isDark ? '#121210' : '#f4f1e9')
+    }
+    toggles.forEach(btn => {
+      btn.setAttribute('aria-pressed', String(isDark))
+      const label = $('.theme-toggle-label', btn)
+      if (label) label.textContent = isDark ? 'NIGHT' : 'DAY'
+    })
+    try {
+      localStorage.setItem('forma-theme', isDark ? 'dark' : 'light')
+    } catch {}
+    if (notify) {
+      announce(isDark ? 'Switched to Night Atelier theme' : 'Switched to Day Atelier theme')
+    }
+  }
+
+  let initialTheme = document.documentElement.getAttribute('data-theme')
+  if (!initialTheme) {
+    try {
+      initialTheme = localStorage.getItem('forma-theme')
+    } catch {}
+  }
+  applyTheme(initialTheme === 'dark' ? 'dark' : 'light', false)
+
+  toggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+      applyTheme(current === 'dark' ? 'light' : 'dark', true)
+    })
+  })
+}
+
+initThemeToggle()
 initSplitText()
 initScrollEngine()
 initMagneticAndTilt()

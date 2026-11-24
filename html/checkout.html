@@ -5,12 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f4f1e9" />
   <meta name="description" content="Review your FORMA collection and checkout preview." />
+  <meta property="og:title" content="Atelier Checkout | FORMA" />
+  <meta property="og:description" content="Complete your FORMA Atelier order with instant SQLite relational database persistence." />
+  <meta property="og:type" content="website" />
   <title>Checkout | FORMA</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231b1b17'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='34' fill='%23d7c5a5'%3EF%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,400&family=Italiana&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="../css/checkout.css" />
+  <link rel="stylesheet" href="../css/tailwind.css" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('forma-theme');
+        if (saved === 'dark' || saved === 'light') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <script src="../js/checkout.js" defer></script>
 </head>
 <body class="checkout-page">
@@ -36,7 +51,16 @@
       <strong>FORMA</strong>
       <span>ATELIER OF EVERYDAY</span>
     </a>
-    <a class="checkout-back" href="index.html">&larr; <span>CONTINUE SHOPPING</span></a>
+    <div class="checkout-header-actions">
+      <button type="button" class="icon-button theme-toggle" data-theme-toggle aria-label="Toggle Day and Night mode" aria-pressed="false" title="Switch Day / Night Atelier Theme">
+        <span class="theme-icon-track" aria-hidden="true">
+          <svg class="theme-icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.4M12 19.6V22M4.93 4.93l1.7 1.7M17.37 17.37l1.7 1.7M2 12h2.4M19.6 12H22M4.93 19.07l1.7-1.7M17.37 6.63l1.7-1.7"/></svg>
+          <svg class="theme-icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+        <span class="theme-toggle-label">DAY</span>
+      </button>
+      <a class="checkout-back" href="index.html">&larr; <span>CONTINUE SHOPPING</span></a>
+    </div>
   </header>
 
   <main class="checkout-layout">
@@ -47,12 +71,12 @@
         <span class="step-num" id="step-two-num">02</span> ORDER REVIEW
       </div>
       <p class="eyebrow">A FEW FINAL DETAILS</p>
-      <h1 id="checkout-title">Checkout <em>preview.</em></h1>
-      <p class="checkout-intro">Add delivery details and review your selection before finishing this demo checkout.</p>
+      <h1 id="checkout-title">Atelier <em>checkout.</em></h1>
+      <p class="checkout-intro">Enter your delivery details and review your selection. Orders are recorded directly in the FORMA SQL relational database.</p>
 
-      <div class="demo-notice">
-        <span aria-hidden="true">i</span>
-        <p><strong>Demo checkout</strong><br/>This preview does not send orders or collect payment.</p>
+      <div class="demo-notice sql-active-notice">
+        <span aria-hidden="true">&#10003;</span>
+        <p><strong>Live SQL Order Engine Active</strong><br/>Your order details and line items are persisted to the SQLite relational database (<code>database/forma_atelier.db</code>).</p>
       </div>
 
       <div class="empty-checkout" hidden>
@@ -139,7 +163,7 @@
         <div class="checkout-actions">
           <a href="index.html" class="back-to-bag">&larr; Return to shopping</a>
           <button class="place-order" type="submit">
-            <span class="place-order-label">FINISH CHECKOUT PREVIEW</span>
+            <span class="place-order-label">COMPLETE ATELIER ORDER</span>
             <span class="place-order-arrow">&rarr;</span>
           </button>
         </div>
@@ -148,14 +172,18 @@
 
       <section class="order-success" hidden aria-live="polite">
         <span class="success-mark">&#10003;</span>
-        <p class="eyebrow">PREVIEW COMPLETE</p>
-        <h2>Thank you for exploring<br/><em>FORMA.</em></h2>
-        <p>Your checkout details were reviewed in this demo. No order was sent and no payment was taken.</p>
+        <p class="eyebrow">ORDER RECORDED IN SQL DATABASE</p>
+        <h2>Thank you for your<br/><em>FORMA order.</em></h2>
+        <p id="order-success-lead">Your order has been saved to the FORMA relational database and is being prepared in our studio.</p>
         <div class="success-reference">
-          <span>PREVIEW REFERENCE</span>
-          <strong id="order-ref-code">FRM-2026-084</strong>
+          <span>SQL ORDER REFERENCE</span>
+          <strong id="order-ref-code">FRM-2026-1042</strong>
+          <small id="order-meta-summary"></small>
         </div>
-        <a href="index.html" class="success-link">RETURN TO THE COLLECTION <span>&rarr;</span></a>
+        <div class="success-actions">
+          <button type="button" class="print-receipt-btn" onclick="window.print()">PRINT ATELIER RECEIPT <span>⎙</span></button>
+          <a href="index.html" class="success-link">RETURN TO THE COLLECTION <span>&rarr;</span></a>
+        </div>
       </section>
     </section>
 
@@ -168,6 +196,21 @@
         <span class="summary-count">0 ITEMS</span>
       </div>
       <div class="checkout-items"></div>
+
+      <div class="promo-box">
+        <label class="promo-label" for="promo-input">ATELIER PRIVILEGE CODE</label>
+        <div class="promo-input-row">
+          <input id="promo-input" type="text" placeholder="Try ATELIER10 (10% off)" />
+          <button type="button" class="promo-apply-btn">APPLY</button>
+        </div>
+        <div class="promo-quick-row">
+          <span>AVAILABLE:</span>
+          <button type="button" class="promo-chip" data-apply-code="ATELIER10">ATELIER10 (10% OFF)</button>
+          <button type="button" class="promo-chip" data-apply-code="KUNAL15">KUNAL15 (15% OFF)</button>
+        </div>
+        <small class="promo-feedback" aria-live="polite"></small>
+      </div>
+
       <div class="shipping-progress">
         <span class="shipping-icon" aria-hidden="true">&#10003;</span>
         <div class="shipping-progress-body">
@@ -178,9 +221,10 @@
       </div>
       <div class="summary-lines">
         <div><span>Subtotal</span><strong class="summary-subtotal">INR 0</strong></div>
+        <div class="summary-discount-row" hidden><span>Privilege Discount</span><strong class="summary-discount">− INR 0</strong></div>
         <div><span>Delivery</span><strong class="summary-shipping">INR 0</strong></div>
         <div class="summary-total"><span>Total</span><strong class="summary-grand-total">INR 0</strong></div>
-        <p>Prices are shown in Indian rupees.</p>
+        <p>Prices are shown in Indian rupees · Persisted via SQLite3.</p>
       </div>
       <a class="edit-bag" href="index.html">EDIT YOUR BAG <span>&rarr;</span></a>
     </aside>

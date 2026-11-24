@@ -14,8 +14,8 @@
   top: 0;
   z-index: 30;
   background: linear-gradient(180deg, rgba(250, 248, 243, 0.95) 0%, rgba(244, 241, 233, 0.9) 100%);
-  backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 8px 30px rgba(36, 36, 31, 0.03);
   animation: headerDrop 0.65s var(--ease-editorial) both;
 }
@@ -938,4 +938,154 @@
   .checkout-header {
     animation: none !important;
   }
+}
+
+/* ==========================================================================
+   SQL Order Engine Notice, Privilege Promo Box & Receipt Actions
+   ========================================================================== */
+
+.sql-active-notice {
+  border-left-color: var(--olive);
+  background: rgba(119, 123, 104, 0.1);
+}
+
+.sql-active-notice > span {
+  border-color: var(--olive);
+  background: var(--olive);
+  color: #fff;
+  font: 11px var(--sans);
+}
+
+.promo-box {
+  padding: 14px 0;
+  border-bottom: 1px solid #e1dbd0;
+}
+
+.promo-label {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--accent-strong);
+  margin-bottom: 8px;
+}
+
+.promo-input-row {
+  display: flex;
+  gap: 6px;
+}
+
+.promo-input-row input {
+  flex: 1;
+  height: 36px;
+  border: 1px solid #d5cfc3;
+  background: var(--white);
+  padding: 0 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  outline: 0;
+}
+
+.promo-input-row input:focus {
+  border-color: var(--accent-strong);
+}
+
+.promo-apply-btn {
+  height: 36px;
+  padding: 0 14px;
+  background: var(--night);
+  color: #fff;
+  border: 0;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.promo-apply-btn:hover {
+  background: var(--accent-strong);
+}
+
+.promo-quick-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.promo-quick-row span {
+  font-size: 7.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.promo-chip {
+  padding: 3px 8px;
+  background: var(--white);
+  border: 1px solid rgba(168, 142, 101, 0.35);
+  color: var(--accent-strong);
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.promo-chip:hover {
+  background: var(--night);
+  border-color: var(--night);
+  color: #fff;
+}
+
+.promo-feedback {
+  display: block;
+  font-size: 9.5px;
+  margin-top: 6px;
+  color: #4f5e43;
+  font-weight: 600;
+}
+
+.promo-feedback.is-error {
+  color: #9c4d3f;
+}
+
+.summary-discount-row strong {
+  color: #4f5e43 !important;
+}
+
+.success-reference small {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.print-receipt-btn {
+  height: 44px;
+  width: min(330px, 100%);
+  padding: 0 16px;
+  background: var(--night);
+  color: #fff;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.print-receipt-btn:hover {
+  background: var(--accent-strong);
 }
